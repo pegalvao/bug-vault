@@ -33,7 +33,7 @@
             wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
         }).ready((fs, main) => {
             // Extrai o arquivo ZIP completo contendo o executável e o WAD
-            fs.extract("doom_dOS.ZIP").then(() => {
+            fs.extract("doom_dos.ZIP").then(() => {
                 main(["-c", "DOOM.EXE"]);
             });
         });
