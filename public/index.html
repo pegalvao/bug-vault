@@ -1,52 +1,45 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Ambiente de Homologação: Doom WebAssembly</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Doom Portfolio - Homologação</title>
     
-    <!-- 1. ELIMINAR O ERRO 404 DO FAVICON -->
+    <!-- Evita o erro 404 do favicon na consola -->
     <link rel="icon" href="data:,">
-
-    <!-- Dependências do js-dos -->
-    <script src="js-dos.js"></script>
-    <link rel="stylesheet" href="js-dos.css">
-
+    
+    <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
     <style>
+        body {
+            background-color: #111;
+            color: #fff;
+            font-family: sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
         #dos {
             width: 640px;
             height: 400px;
-            margin: 0 auto;
+            margin: 20px auto;
+            border: 2px solid #555;
         }
     </style>
 </head>
 <body>
+    <h1>Ambiente de Homologação: Doom WebAssembly</h1>
+    <p>Status: Executando no navegador via WebAssembly</p>
+    
+    <canvas id="dos"></canvas>
 
-    <div id="dos"></div>
-
-    <!-- CÓDIGO JAVASCRIPT -->
     <script>
-        
-        const canvasElement = document.createElement('canvas');
-        const ctx = canvasElement.getContext('2d', { willReadFrequently: true });
-
         Dos(document.getElementById("dos"), {
-            wdosboxUrl: "wdosbox.js"
-        }).ready((dos) => {
-            
-            const unlockAudio = () => {
-                if (dos.audioContext && dos.audioContext.state === 'suspended') {
-                    dos.audioContext.resume().then(() => {
-                        console.log('AudioContext ativado com sucesso.');
-                    });
-                }
-                window.removeEventListener('click', unlockAudio);
-                window.removeEventListener('keydown', unlockAudio);
-            };
-
-            window.addEventListener('click', unlockAudio);
-            window.addEventListener('keydown', unlockAudio);
-
-            dos.run("doom_dos.ZIP");
+            wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
+        }).ready((fs, main) => {
+            // Extrai o arquivo ZIP completo contendo o executável e o WAD
+            fs.extract("doom_dos.ZIP").then(() => {
+                main(["-c", "DOOM.EXE"]);
+            });
         });
     </script>
 </body>
