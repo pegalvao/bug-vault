@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QA Doom Portfolio - Homologação</title>
-    <!-- CDN Oficial do mantenedor do js-dos -->
     <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
     <style>
         body {
@@ -25,17 +24,16 @@
 </head>
 <body>
     <h1>Ambiente de Homologação: Doom WebAssembly</h1>
-    <p>Status: Carregando emulador WebAssembly...</p>
+    <p>Status: Executando no navegador via WebAssembly</p>
     
-    <!-- Elemento Canvas/Container do jogo -->
     <div id="dos"></div>
 
     <script>
-        // Aponta para o motor do DOSBox oficial v6
         Dos(document.getElementById("dos"), {
             wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
         }).ready((fs, main) => {
-            fs.extract("doom1.wad").then(() => {
+            // Extrai o arquivo ZIP completo contendo o executável e o WAD
+            fs.extract("doom1.zip").then(() => {
                 main(["-c", "DOOM1.EXE"]);
             });
         });
