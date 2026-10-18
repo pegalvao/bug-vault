@@ -2,10 +2,43 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>QA Doom Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Doom Portfolio - Homologação</title>
+    <!-- Importa a biblioteca js-dos que roda o motor em WebAssembly -->
+    <script src="https://v6.js-dos.com/latest/js-dos.js"></script>
+    <style>
+        body {
+            background-color: #111;
+            color: #fff;
+            font-family: sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        #dos {
+            width: 640px;
+            height: 400px;
+            margin: 20px auto;
+            border: 2px solid #555;
+        }
+    </style>
 </head>
 <body>
-    <h1>Ambiente de Homologação em Produção</h1>
-    <p>Esteira CI/CD configurada com sucesso!</p>
+    <h1>Ambiente de Homologação: Doom WebAssembly</h1>
+    <p>Status: Aguardando interação para iniciar</p>
+    
+    <!-- O elemento onde o WebAssembly vai desenhar o jogo -->
+    <div id="dos"></div>
+
+    <script>
+        // Inicializa o motor do DOS em WebAssembly apontando para o WAD
+        Dos(document.getElementById("dos"), {
+            wdosboxUrl: "https://v6.js-dos.com/latest/wdosbox.js",
+        }).ready((fs, main) => {
+            fs.extract("doom1.wad").then(() => {
+                main(["-c", "DOOM1.EXE"]);
+            });
+        });
+    </script>
 </body>
 </html>
