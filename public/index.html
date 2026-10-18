@@ -34,7 +34,7 @@
         }).ready((fs, main) => {
             // Extrai o arquivo ZIP completo contendo o executável e o WAD
             fs.extract("doom1.zip").then(() => {
-                main(["-c", "DOOM95.EXE"]);
+                main(["-c", "DOOM.EXE"]);
             });
         });
     </script>
