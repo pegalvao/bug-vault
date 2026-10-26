@@ -8,7 +8,10 @@
     <!-- Evita o erro 404 do favicon na consola -->
     <link rel="icon" href="data:,">
     
+    <!-- Bibliotecas e Scripts -->
     <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
+    <script src="app.js"></script>
+
     <style>
         body {
             background-color: #111;
@@ -31,16 +34,5 @@
     <p>Status: Executando no navegador via WebAssembly</p>
     
     <canvas id="dos"></canvas>
-
-    <script>
-        Dos(document.getElementById("dos"), {
-            wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
-        }).ready((fs, main) => {
-            // Extrai o arquivo ZIP completo contendo o executável e o WAD
-            fs.extract("doom_dos.ZIP").then(() => {
-                main(["-c", "DOOM.EXE"]);
-            });
-        });
-    </script>
 </body>
 </html>
