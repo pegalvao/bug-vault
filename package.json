@@ -1,0 +1,14 @@
+{
+  "name": "doom-qa-lab",
+  "version": "1.0.0",
+  "description": "Ambiente de homologação e testes automatizados E2E para Doom WebAssembly",
+  "main": "index.html",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1"
+  }
+}
