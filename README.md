@@ -54,6 +54,7 @@ Plaintext
 ├── tests/
 │   └── doom.spec.js    # Suite de testes E2E com Playwright
 └── README.md           # Documentação do projeto
+
 🧪 Cobertura de Testes Automatizados
 A suite de testes em Playwright valida:
 
