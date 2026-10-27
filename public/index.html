@@ -3,36 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QA Doom Portfolio - Homologação</title>
+    <title>DOOM QA LAB</title>
     
-    <!-- Evita o erro 404 do favicon na consola -->
+    <!-- Evita erro 404 do Favicon -->
     <link rel="icon" href="data:,">
     
-    <!-- Bibliotecas e Scripts -->
+    <!-- CSS e Scripts -->
+    <link rel="stylesheet" href="style.css">
     <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
     <script src="app.js"></script>
-
-    <style>
-        body {
-            background-color: #111;
-            color: #fff;
-            font-family: sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        #dos {
-            width: 640px;
-            height: 400px;
-            margin: 20px auto;
-            border: 2px solid #555;
-        }
-    </style>
 </head>
 <body>
-    <h1>Ambiente de Homologação: Doom WebAssembly</h1>
-    <p>Status: Executando no navegador via WebAssembly</p>
-    
-    <canvas id="dos"></canvas>
+
+    <header>
+        <h1>DOOM VAULT</h1>
+        <div class="subtitle">WASM QA Testing Grounds & Emulation Sandbox</div>
+    </header>
+
+    <div class="container">
+        <!-- ÁREA DO JOGO -->
+        <main class="game-section">
+            <canvas id="dos"></canvas>
+            
+            <div class="status-bar">
+                <span class="badge"><span class="dot"></span> Engine: WASM / js-dos v6.22</span>
+                <span class="badge"><span class="dot"></span> Resolution: 640x400</span>
+                <span class="badge"><span class="dot"></span> Audio: Active</span>
+            </div>
+        </main>
+
+        <!-- BARRA LATERAL (OPERADOR & COMANDOS) -->
+        <aside class="sidebar">
+            <!-- CARTÃO DO OPERADOR (QA LEAD) -->
+            <div class="card operator-card">
+                <img src="avatar.png" alt="QA Lead Avatar" class="operator-avatar">
+                <div class="operator-info">
+                    <h3>P. Evaristo</h3>
+                    <p>QA</p>
+                </div>
+            </div>
+
+            <!-- GUIA DE COMANDOS DO DOOM -->
+            <div class="card controls-card">
+                <h3>🎮 Guia de Comandos</h3>
+                
+                <div class="control-item">
+                    <span>Mover Personagem</span>
+                    <span class="key">Setas / WASD</span>
+                </div>
+                <div class="control-item">
+                    <span>Atirar / Disparar</span>
+                    <span class="key">CTRL</span>
+                </div>
+                <div class="control-item">
+                    <span>Abrir Portas / Interagir</span>
+                    <span class="key">ESPAÇO</span>
+                </div>
+                <div class="control-item">
+                    <span>Correr</span>
+                    <span class="key">SHIFT</span>
+                </div>
+                <div class="control-item">
+                    <span>Trocar de Arma</span>
+                    <span class="key">1 - 7</span>
+                </div>
+                <div class="control-item">
+                    <span>Menu / Pausa</span>
+                    <span class="key">ESC</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
 </body>
 </html>
