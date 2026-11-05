@@ -1,4 +1,4 @@
-// app.js - Otimizações de Canvas, Áudio e Inicialização do Doom WASM
+// app.js - Otimizações de Canvas, Áudio e Inicialização do Freedoom (FastDoom + js-dos)
 
 (function () {
     // 1. Interceção global do Canvas2D para injetar 'willReadFrequently: true'
@@ -23,11 +23,11 @@
         Dos(canvas, {
             wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
         }).ready((fs, main) => {
-            console.log("[QA Log] Emulador WebAssembly pronto. Extraindo doom_dos.ZIP...");
+            console.log("[QA Log] Emulador WebAssembly pronto. Extraindo freedoom.zip...");
 
-            fs.extract("doom_dos.ZIP").then(() => {
-                console.log("[QA Log] Extração concluída. Executando DOOM.EXE...");
-                main(["-c", "DOOM.EXE"]);
+            fs.extract("freedoom.zip").then(() => {
+                console.log("[QA Log] Extração concluída. Executando FDOOM.EXE...");
+                main(["-c", "FDOOM.EXE"]);
             }).catch((err) => {
                 console.error("[QA Error] Erro ao extrair ou executar pacote do jogo:", err);
             });
