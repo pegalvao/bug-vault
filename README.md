@@ -11,7 +11,7 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
 * **Front-end:** HTML5, CSS3, JavaScript (ES6+).
 * **Emulação:** WebAssembly, `js-dos v6.22` (MS-DOS Box).
 * **Jogo:** motor FastDoom v1.3.0 (DOS) com os dados do Freedoom Phase 1 v0.13.0.
-* **Automação & QA:** Node.js, Playwright.
+* **Automação & QA:** Node.js, Playwright, TypeScript.
 * **Hospedagem & CI/CD:** GitHub Pages / GitHub Actions.
 
 ---
@@ -27,8 +27,8 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
 
 1. **Clonar o repositório:**
    ```bash
-   git clone https://github.com/seu-usuario/seu-repositorio.git
-   cd seu-repositorio
+   git clone https://github.com/pegalvao/bug-vault.git
+   cd bug-vault
    ```
 
 2. **Instalar as dependências do Node.js:**
@@ -53,6 +53,12 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
    npm run test:ui
    ```
 
+5. **Abrir o jogo no navegador (opcional):**
+   ```bash
+   npm run serve
+   ```
+   O jogo fica em `http://127.0.0.1:4173`. Os testes sobem esse servidor sozinhos, e a máquina precisa de internet porque o js-dos vem do CDN.
+
 ---
 
 ## 📂 Estrutura do Projeto
@@ -64,21 +70,38 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
 │   ├── freedoom.zip    # Pacote do jogo (FDOOM.EXE, FREEDM1.WAD, FDOOM.CFG)
 │   ├── licenses/       # Textos das licenças do motor e do jogo
 │   └── source/         # Código-fonte do FastDoom (exigência da GPL)
-├── package.json        # Dependências e scripts do ecossistema Node.js / Playwright
 ├── tests/
-│   └── doom.spec.js    # Suite de testes E2E com Playwright
-└── README.md           # Documentação do projeto
+│   ├── pages/              # Page Objects: seletores, comandos e leitura da tela
+│   │   ├── home-page.ts    # Página em volta do jogo
+│   │   └── game-page.ts    # Jogo dentro do canvas
+│   ├── fixtures.ts         # Entrega o jogo aberto, iniciado ou em partida
+│   ├── page.spec.ts        # Testes da página
+│   ├── boot.spec.ts        # Testes da inicialização do emulador
+│   └── gameplay.spec.ts    # Testes das regras do jogo
+├── playwright.config.ts    # Configuração do Playwright e do servidor de testes
+├── tsconfig.json           # Checagem de tipos dos testes (`npm run typecheck`)
+├── package.json            # Dependências e scripts do ecossistema Node.js / Playwright
+└── README.md               # Documentação do projeto
 ```
 
 ---
 
 ## 🧪 Cobertura de Testes Automatizados
 
-A suite de testes em Playwright valida:
-* Presença e renderização do elemento `<canvas id="dos">`.
-* Resolução e proporções do container de emulação (`640x400`).
-* Monitorização e captura de erros na consola do navegador.
-* Disparo de eventos de teclado e clique para interação com o jogo.
+A suite é escrita em TypeScript, usa o padrão Page Object Model e tem 13 testes em três camadas:
+
+* **Página:** título, tamanho do canvas (`640x400`), guia de comandos e links de licença.
+* **Boot:** ordem de inicialização, ausência de erros, tela desenhada, animação sem jogador e erro registrado quando o `freedoom.zip` não carrega.
+* **Gameplay:** valores iniciais do HUD, câmera parada sem input, andar, girar, tiro que consome munição e pausa pelo menu.
+
+### Como o jogo é verificado
+
+O jogo não tem elementos HTML para consultar: tudo é pixel dentro do canvas. Por isso os testes leem os pixels e usam duas técnicas:
+
+* **Impressão digital do HUD:** um hash da região dos números. A munição e a vida têm um valor conhecido no início da partida, e o tiro precisa mudar só o da munição.
+* **Diferença entre leituras:** a fração de pixels que mudou. Parado, o cenário varia até cerca de 5%. Andando ou girando, varia mais de 50%.
+
+Os testes rodam um por vez, porque o emulador é pesado e a disputa por CPU pode atrasar o jogo. Se o `FREEDM1.WAD` mudar, as impressões digitais em `tests/pages/game-page.ts` precisam ser recapturadas.
 
 ---
 

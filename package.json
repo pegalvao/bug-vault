@@ -1,14 +1,19 @@
 {
-  "name": "doom-qa-lab",
+  "name": "bug-vault",
   "version": "1.0.0",
-  "description": "Ambiente de homologação e testes automatizados E2E para Doom WebAssembly",
+  "description": "Ambiente de homologação e testes automatizados E2E para o Freedoom em WebAssembly",
   "main": "index.html",
   "scripts": {
+    "serve": "http-server public -p 4173 -a 127.0.0.1 -c-1",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "typecheck": "tsc"
   },
   "devDependencies": {
-    "@playwright/test": "^1.64.1"
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.6",
+    "http-server": "^14.1.1",
+    "typescript": "^7.0.2"
   }
 }
