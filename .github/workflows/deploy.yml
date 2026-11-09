@@ -2,9 +2,9 @@ name: Testes e Deploy para GitHub Pages
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 permissions:
   contents: read
@@ -17,12 +17,15 @@ concurrency:
 
 jobs:
   test:
-    name: Typecheck e testes E2E
+    name: Qualidade e testes E2E
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
+        with:
+          # O histórico completo permite checar as mensagens dos commits novos.
+          fetch-depth: 0
 
       - name: Configurar o Node.js
         uses: actions/setup-node@v4
@@ -33,11 +36,25 @@ jobs:
       - name: Instalar as dependências
         run: npm ci
 
-      - name: Instalar o Chromium do Playwright
-        run: npx playwright install --with-deps chromium
+      - name: Checar as mensagens de commit (pull request)
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }}
+
+      - name: Checar as mensagens de commit (push)
+        if: github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000'
+        run: npx commitlint --from ${{ github.event.before }} --to ${{ github.sha }}
+
+      - name: Rodar o ESLint
+        run: npm run lint
+
+      - name: Checar a formatação
+        run: npm run format:check
 
       - name: Checar os tipos
         run: npm run typecheck
+
+      - name: Instalar o Chromium do Playwright
+        run: npx playwright install --with-deps chromium
 
       - name: Rodar os testes
         run: npm test
