@@ -11,7 +11,7 @@ test.describe('Página', () => {
   test('Lista todos os comandos do jogo', async ({ homePage }) => {
     await expect(homePage.commandKeys).toHaveText([
       'Setas',
-      'CTRL',
+      'CTRL E MOUSE',
       'ESPAÇO',
       'SHIFT',
       '1 - 7',
