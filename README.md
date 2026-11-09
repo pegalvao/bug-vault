@@ -18,7 +18,7 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
 
 ## 📋 Pré-requisitos
 
-* **Node.js** (versão 18 ou superior)
+* **Node.js** (versão 20 ou superior, exigida pelo Playwright)
 * **npm** (gerenciador de pacotes do Node.js)
 
 ---
@@ -66,7 +66,9 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
 ```text
 ├── public/
 │   ├── index.html      # Aplicação web com o container WebAssembly
-│   ├── app.js          # Inicialização do emulador e do jogo
+│   ├── app.js          # Inicialização do emulador, do jogo e do áudio
+│   ├── style.css       # Estilos da página
+│   ├── avatar.webp     # Foto do cartão do operador
 │   ├── freedoom.zip    # Pacote do jogo (FDOOM.EXE, FREEDM1.WAD, FDOOM.CFG)
 │   ├── licenses/       # Textos das licenças do motor e do jogo
 │   └── source/         # Código-fonte do FastDoom (exigência da GPL)
@@ -79,6 +81,7 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
 │   ├── boot.spec.ts        # Testes da inicialização do emulador
 │   └── gameplay.spec.ts    # Testes das regras do jogo
 ├── playwright.config.ts    # Configuração do Playwright e do servidor de testes
+├── .github/workflows/deploy.yml  # CI: typecheck e testes antes de publicar no GitHub Pages
 ├── tsconfig.json           # Checagem de tipos dos testes (`npm run typecheck`)
 ├── package.json            # Dependências e scripts do ecossistema Node.js / Playwright
 └── README.md               # Documentação do projeto
@@ -88,10 +91,10 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
 
 ## 🧪 Cobertura de Testes Automatizados
 
-A suite é escrita em TypeScript, usa o padrão Page Object Model e tem 13 testes em três camadas:
+A suite é escrita em TypeScript, usa o padrão Page Object Model e se divide em três camadas:
 
 * **Página:** título, tamanho do canvas (`640x400`), guia de comandos e links de licença.
-* **Boot:** ordem de inicialização, ausência de erros, tela desenhada, animação sem jogador e erro registrado quando o `freedoom.zip` não carrega.
+* **Boot:** ordem de inicialização, ausência de erros, tela desenhada, animação sem jogador, áudio liberado na primeira interação e erro registrado quando o `freedoom.zip` não carrega.
 * **Gameplay:** valores iniciais do HUD, câmera parada sem input, andar, girar, tiro que consome munição e pausa pelo menu.
 
 ### Como o jogo é verificado
@@ -102,6 +105,10 @@ O jogo não tem elementos HTML para consultar: tudo é pixel dentro do canvas. P
 * **Diferença entre leituras:** a fração de pixels que mudou. Parado, o cenário varia até cerca de 5%. Andando ou girando, varia mais de 50%.
 
 Os testes rodam um por vez, porque o emulador é pesado e a disputa por CPU pode atrasar o jogo. Se o `FREEDM1.WAD` mudar, as impressões digitais em `tests/pages/game-page.ts` precisam ser recapturadas.
+
+### Integração contínua
+
+A cada push e pull request na `main`, o GitHub Actions roda o `npm run typecheck` e a suite do Playwright. O site só é publicado no GitHub Pages depois de um push em que os testes passaram. Quando algum teste falha, o relatório do Playwright fica disponível como artefato da execução.
 
 ---
 
