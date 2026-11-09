@@ -2,7 +2,6 @@
   "name": "bug-vault",
   "version": "1.0.0",
   "description": "Ambiente de homologação e testes automatizados E2E para o Freedoom em WebAssembly",
-  "main": "index.html",
   "scripts": {
     "serve": "http-server public -p 4173 -a 127.0.0.1 -c-1",
     "test": "playwright test",
@@ -15,5 +14,9 @@
     "@types/node": "^26.6.6",
     "http-server": "^14.1.1",
     "typescript": "^7.0.2"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
   }
 }

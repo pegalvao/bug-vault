@@ -4,13 +4,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Relatórios e ficheiros de execução do Playwright
+# Relatórios e arquivos de execução do Playwright
 playwright-report/
 test-results/
 blob-report/
 playwright/.cache/
 
-# Ficheiros do sistema operativo e ambiente
+# Arquivos do sistema operacional e do ambiente
 .env
 .DS_Store
 Thumbs.db
