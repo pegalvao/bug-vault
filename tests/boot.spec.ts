@@ -41,6 +41,17 @@ test.describe('Boot do emulador', () => {
       .toBeGreaterThan(0.2);
   });
 
+  test('ativa o áudio do jogo na primeira interação', async ({ page, bootedGame }) => {
+    const logs: string[] = [];
+    page.on('console', (message) => logs.push(message.text()));
+
+    await bootedGame.canvas.click();
+
+    await expect
+      .poll(() => logs.join('\n'))
+      .toMatch(/áudio ativado \([1-9]\d* contexto\(s\)\)/);
+  });
+
   test('registra o erro quando o pacote do jogo não carrega', async ({ page, gamePage }) => {
     const errors: string[] = [];
     page.on('console', (message) => {
