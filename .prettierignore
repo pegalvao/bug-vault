@@ -1,0 +1,7 @@
+# Arquivos de terceiros, gerados ou que não são código do projeto
+public/vendor/
+public/source/
+public/licenses/
+playwright-report/
+test-results/
+package-lock.json
