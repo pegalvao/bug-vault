@@ -2,7 +2,7 @@ import { test, expect } from './fixtures';
 import { diffRatio } from './pages/game-page';
 
 test.describe('Boot do emulador', () => {
-  test('inicia o jogo sem erros', async ({ page, gamePage }) => {
+  test('Inicia o jogo sem erros', async ({ page, gamePage }) => {
     const logs: string[] = [];
     const errors: string[] = [];
     page.on('console', (message) => {
@@ -30,7 +30,7 @@ test.describe('Boot do emulador', () => {
     expect(errors).toEqual([]);
   });
 
-  test('carrega o emulador e o jogo sem depender de outros domínios', async ({
+  test('Carrega o emulador e o jogo sem depender de outros domínios', async ({
     page,
     gamePage,
     baseURL,
@@ -49,11 +49,11 @@ test.describe('Boot do emulador', () => {
     expect(externalRequests).toEqual([]);
   });
 
-  test('desenha a tela do jogo em vez de um canvas vazio', async ({ bootedGame }) => {
+  test('Desenha a tela do jogo em vez de um canvas vazio', async ({ bootedGame }) => {
     await expect.poll(async () => new Set(await bootedGame.frame()).size).toBeGreaterThan(50);
   });
 
-  test('anima sozinho quando ninguém joga', async ({ bootedGame }) => {
+  test('Anima sozinho quando ninguém joga', async ({ bootedGame }) => {
     const firstFrame = await bootedGame.frame();
 
     await expect
@@ -61,7 +61,7 @@ test.describe('Boot do emulador', () => {
       .toBeGreaterThan(0.2);
   });
 
-  test('ativa o áudio do jogo na primeira interação', async ({ page, bootedGame }) => {
+  test('Ativa o áudio do jogo na primeira interação', async ({ page, bootedGame }) => {
     const logs: string[] = [];
     page.on('console', (message) => logs.push(message.text()));
 
@@ -70,7 +70,7 @@ test.describe('Boot do emulador', () => {
     await expect.poll(() => logs.join('\n')).toMatch(/áudio ativado \([1-9]\d* contexto\(s\)\)/);
   });
 
-  test('registra o erro quando o pacote do jogo não carrega', async ({ page, gamePage }) => {
+  test('Registra o erro quando o pacote do jogo não carrega', async ({ page, gamePage }) => {
     const errors: string[] = [];
     page.on('console', (message) => {
       if (message.type() === 'error') errors.push(message.text());

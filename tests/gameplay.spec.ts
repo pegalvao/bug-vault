@@ -35,7 +35,7 @@ test.describe('Gameplay', () => {
     expect(await runningGame.healthFingerprint()).toBe(NEW_GAME_HUD.health);
   });
 
-  test('o menu pausa o jogo e a partida continua ao fechar', async ({ runningGame }) => {
+  test('O menu pausa o jogo e a partida continua ao fechar', async ({ runningGame }) => {
     await runningGame.toggleMenu();
     const paused = await runningGame.worldStrip();
 
