@@ -27,6 +27,21 @@ test.describe('Boot do emulador', () => {
     expect(errors).toEqual([]);
   });
 
+  test('carrega o emulador e o jogo sem depender de outros domínios', async ({ page, gamePage, baseURL }) => {
+    const externalRequests: string[] = [];
+    page.on('request', (request) => {
+      const url = request.url();
+      if (!url.startsWith(baseURL!) && !url.startsWith('data:') && !url.startsWith('blob:')) {
+        externalRequests.push(url);
+      }
+    });
+
+    await gamePage.goto();
+    await gamePage.waitForBoot();
+
+    expect(externalRequests).toEqual([]);
+  });
+
   test('desenha a tela do jogo em vez de um canvas vazio', async ({ bootedGame }) => {
     await expect
       .poll(async () => new Set(await bootedGame.frame()).size)

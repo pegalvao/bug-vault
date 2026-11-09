@@ -21,7 +21,7 @@ test.describe('Página', () => {
 
   test('Mantém disponíveis as licenças e o código-fonte exigidos', async ({ homePage, request }) => {
     const links = await homePage.legalLinkUrls();
-    expect(links).toHaveLength(4);
+    expect(links).toHaveLength(6);
 
     for (const link of links) {
       const response = await request.head(link);

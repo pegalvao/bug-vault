@@ -35,9 +35,9 @@
             return;
         }
 
-        // Inicializa o emulador js-dos v6.22
+        // Inicializa o emulador js-dos v6.22.60, servido de public/vendor/js-dos
         Dos(canvas, {
-            wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
+            wdosboxUrl: "vendor/js-dos/wdosbox.js"
         }).ready((fs, main) => {
             console.log("[QA Log] Emulador WebAssembly pronto. Extraindo freedoom.zip...");
 

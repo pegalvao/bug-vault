@@ -1,6 +1,6 @@
 # 🎮 BUG VAULT - Ambiente de Homologação & Automação E2E
 
-Ambiente de homologação para execução do **Freedoom** no navegador via **WebAssembly (`js-dos v6.22`)**, integrado com automação de testes E2E utilizando **Node.js** e **Playwright**.
+Ambiente de homologação para execução do **Freedoom** no navegador via **WebAssembly (`js-dos v6.22.60`)**, integrado com automação de testes E2E utilizando **Node.js** e **Playwright**.
 
 O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original foram substituídos pelos do Freedoom. Veja [Licenças](#-licenças).
 
@@ -9,7 +9,7 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
 ## 🛠️ Tecnologias Utilizadas
 
 * **Front-end:** HTML5, CSS3, JavaScript (ES6+).
-* **Emulação:** WebAssembly, `js-dos v6.22` (MS-DOS Box).
+* **Emulação:** WebAssembly, `js-dos v6.22.60` (MS-DOS Box).
 * **Jogo:** motor FastDoom v1.3.0 (DOS) com os dados do Freedoom Phase 1 v0.13.0.
 * **Automação & QA:** Node.js, Playwright, TypeScript.
 * **Hospedagem & CI/CD:** GitHub Pages / GitHub Actions.
@@ -57,7 +57,7 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
    ```bash
    npm run serve
    ```
-   O jogo fica em `http://127.0.0.1:4173`. Os testes sobem esse servidor sozinhos, e a máquina precisa de internet porque o js-dos vem do CDN.
+   O jogo fica em `http://127.0.0.1:4173`. Os testes sobem esse servidor sozinhos. O emulador é servido pelo próprio projeto, então nem o jogo nem os testes precisam de internet depois do `npm install`.
 
 ---
 
@@ -70,8 +70,9 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
 │   ├── style.css       # Estilos da página
 │   ├── avatar.webp     # Foto do cartão do operador
 │   ├── freedoom.zip    # Pacote do jogo (FDOOM.EXE, FREEDM1.WAD, FDOOM.CFG)
-│   ├── licenses/       # Textos das licenças do motor e do jogo
-│   └── source/         # Código-fonte do FastDoom (exigência da GPL)
+│   ├── vendor/js-dos/  # Emulador js-dos 6.22.60 (js-dos.js, wdosbox.js, wdosbox.wasm.js)
+│   ├── licenses/       # Textos das licenças do emulador, do motor e do jogo
+│   └── source/         # Código-fonte do FastDoom e do js-dos (exigência da GPL)
 ├── tests/
 │   ├── pages/              # Page Objects: seletores, comandos e leitura da tela
 │   │   ├── home-page.ts    # Página em volta do jogo
@@ -119,7 +120,7 @@ A cada push e pull request na `main`, o GitHub Actions roda o `npm run typecheck
 | Freedoom Phase 1 (`FREEDM1.WAD`) | 0.13.0 | BSD-3-Clause | [freedoom.github.io](https://freedoom.github.io/) |
 | FastDoom (`FDOOM.EXE`) | 1.3.0 | GPL-2.0 | [viti95/FastDoom](https://github.com/viti95/FastDoom/tree/1.3.0) |
 | DOS/32A (embutido no `FDOOM.EXE`) | - | Licença própria, permissiva | [public/licenses/DOS32A-LICENSE.txt](public/licenses/DOS32A-LICENSE.txt) |
-| js-dos | 6.22 | GPL | [js-dos.com](https://js-dos.com/) |
+| js-dos (com DOSBox) | 6.22.60 | GPL-2.0 | [caiiiycuk/js-dos](https://github.com/caiiiycuk/js-dos/tree/6.22.60) |
 
 Os textos das licenças estão em [`public/licenses/`](public/licenses/).
 
@@ -128,6 +129,12 @@ This product uses DOS/32 Advanced DOS Extender technology.
 ### Código-fonte do FastDoom
 
 O arquivo [`public/source/FastDoom-1.3.0-src.zip`](public/source/FastDoom-1.3.0-src.zip) é o fonte da tag 1.3.0, publicado junto do binário como pede a GPL. Dele foram retirados os arquivos `WAD/*.WAD`, que têm lumps de fontes e não são usados pelo `FDOOM.EXE`. O arquivo original completo está em [viti95/FastDoom](https://github.com/viti95/FastDoom/tree/1.3.0).
+
+### Emulador js-dos
+
+Os arquivos em [`public/vendor/js-dos/`](public/vendor/js-dos/) vêm do pacote npm `js-dos@6.22.60` (pasta `dist/`) e são idênticos aos que o CDN `js-dos.com/6.22/current/` servia. Servi-los pelo próprio site evita que o jogo e os testes quebrem se o CDN cair ou trocar a versão `current`.
+
+Como o site passa a distribuir o emulador, o fonte da tag 6.22.60 fica em [`public/source/js-dos-6.22.60-src.zip`](public/source/js-dos-6.22.60-src.zip), com o DOSBox incluído. Para atualizar a versão, troque os três arquivos, o zip do fonte e os números de versão no `index.html` e no `app.js`.
 
 ### Como o `freedoom.zip` é montado
 
