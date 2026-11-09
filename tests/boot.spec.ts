@@ -22,12 +22,19 @@ test.describe('Boot do emulador', () => {
       '[QA Log] Extração concluída. Executando FDOOM.EXE...',
     ];
     const positions = expectedOrder.map((text) => logs.findIndex((log) => log.includes(text)));
-    expect(positions.every((position) => position >= 0), positions.join()).toBe(true);
+    expect(
+      positions.every((position) => position >= 0),
+      positions.join(),
+    ).toBe(true);
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
     expect(errors).toEqual([]);
   });
 
-  test('carrega o emulador e o jogo sem depender de outros domínios', async ({ page, gamePage, baseURL }) => {
+  test('carrega o emulador e o jogo sem depender de outros domínios', async ({
+    page,
+    gamePage,
+    baseURL,
+  }) => {
     const externalRequests: string[] = [];
     page.on('request', (request) => {
       const url = request.url();
@@ -43,9 +50,7 @@ test.describe('Boot do emulador', () => {
   });
 
   test('desenha a tela do jogo em vez de um canvas vazio', async ({ bootedGame }) => {
-    await expect
-      .poll(async () => new Set(await bootedGame.frame()).size)
-      .toBeGreaterThan(50);
+    await expect.poll(async () => new Set(await bootedGame.frame()).size).toBeGreaterThan(50);
   });
 
   test('anima sozinho quando ninguém joga', async ({ bootedGame }) => {
@@ -62,9 +67,7 @@ test.describe('Boot do emulador', () => {
 
     await bootedGame.canvas.click();
 
-    await expect
-      .poll(() => logs.join('\n'))
-      .toMatch(/áudio ativado \([1-9]\d* contexto\(s\)\)/);
+    await expect.poll(() => logs.join('\n')).toMatch(/áudio ativado \([1-9]\d* contexto\(s\)\)/);
   });
 
   test('registra o erro quando o pacote do jogo não carrega', async ({ page, gamePage }) => {

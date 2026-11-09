@@ -129,7 +129,10 @@ export class GamePage {
   }
 
   async fingerprint(region: Region): Promise<string> {
-    const digest = crypto.createHash('sha1').update(await this.pixels(region)).digest('hex');
+    const digest = crypto
+      .createHash('sha1')
+      .update(await this.pixels(region))
+      .digest('hex');
     return digest.slice(0, 12);
   }
 }
@@ -139,7 +142,11 @@ export function diffRatio(before: Buffer, after: Buffer): number {
   if (before.length !== after.length) throw new Error('Leituras de tamanhos diferentes');
   let changed = 0;
   for (let i = 0; i < before.length; i += 3) {
-    if (before[i] !== after[i] || before[i + 1] !== after[i + 1] || before[i + 2] !== after[i + 2]) {
+    if (
+      before[i] !== after[i] ||
+      before[i + 1] !== after[i + 1] ||
+      before[i + 2] !== after[i + 2]
+    ) {
       changed += 1;
     }
   }

@@ -19,7 +19,10 @@ test.describe('Página', () => {
     ]);
   });
 
-  test('Mantém disponíveis as licenças e o código-fonte exigidos', async ({ homePage, request }) => {
+  test('Mantém disponíveis as licenças e o código-fonte exigidos', async ({
+    homePage,
+    request,
+  }) => {
     const links = await homePage.legalLinkUrls();
     expect(links).toHaveLength(6);
 

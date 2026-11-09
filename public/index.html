@@ -1,94 +1,105 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BUG VAULT</title>
-    
+
     <!-- Evita erro 404 do Favicon -->
-    <link rel="icon" href="data:,">
-    
+    <link rel="icon" href="data:," />
+
     <!-- CSS e Scripts -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="vendor/js-dos/js-dos.js"></script>
     <script src="app.js"></script>
-</head>
-<body>
-
+  </head>
+  <body>
     <header>
-        <h1>BUG VAULT</h1>
-        <div class="subtitle">Ambiente de Testes QA & Emulação WASM</div>
+      <h1>BUG VAULT</h1>
+      <div class="subtitle">Ambiente de Testes QA & Emulação WASM</div>
     </header>
 
     <div class="container">
-        <!-- ÁREA DO JOGO -->
-        <main class="game-section">
-            <canvas id="dos"></canvas>
-            
-            <div class="status-bar">
-                <span class="badge"><span class="dot"></span> Motor: WASM / js-dos v6.22</span>
-                <span class="badge"><span class="dot"></span> Resolução: 640x400</span>
-                <span class="badge"><span class="dot"></span> Áudio: Ativo</span>
-            </div>
-        </main>
+      <!-- ÁREA DO JOGO -->
+      <main class="game-section">
+        <canvas id="dos"></canvas>
 
-        <!-- BARRA LATERAL (OPERADOR & COMANDOS) -->
-        <aside class="sidebar">
-            <!-- CARTÃO DO OPERADOR (QA LEAD) -->
-            <div class="card operator-card">
-                <img src="avatar.webp" alt="Avatar do QA Lead" class="operator-avatar" width="85" height="85">
-                <div class="operator-info">
-                    <h3>Pedro Evaristo</h3>
-                    <p>QA</p>
-                </div>
-            </div>
+        <div class="status-bar">
+          <span class="badge"><span class="dot"></span> Motor: WASM / js-dos v6.22</span>
+          <span class="badge"><span class="dot"></span> Resolução: 640x400</span>
+          <span class="badge"><span class="dot"></span> Áudio: Ativo</span>
+        </div>
+      </main>
 
-            <!-- GUIA DE COMANDOS DO JOGO -->
-            <div class="card controls-card">
-                <h3>🎮 Guia de Comandos</h3>
-                
-                <div class="control-item">
-                    <span>Mover Personagem</span>
-                    <span class="key">Setas</span>
-                </div>
-                <div class="control-item">
-                    <span>Atirar / Disparar</span>
-                    <span class="key">CTRL</span>
-                </div>
-                <div class="control-item">
-                    <span>Abrir Portas / Interagir</span>
-                    <span class="key">ESPAÇO</span>
-                </div>
-                <div class="control-item">
-                    <span>Correr</span>
-                    <span class="key">SHIFT</span>
-                </div>
-                <div class="control-item">
-                    <span>Trocar de Arma</span>
-                    <span class="key">1 - 7</span>
-                </div>
-                <div class="control-item">
-                    <span>Menu / Pausa</span>
-                    <span class="key">ESC</span>
-                </div>
-            </div>
-        </aside>
+      <!-- BARRA LATERAL (OPERADOR & COMANDOS) -->
+      <aside class="sidebar">
+        <!-- CARTÃO DO OPERADOR (QA LEAD) -->
+        <div class="card operator-card">
+          <img
+            src="avatar.webp"
+            alt="Avatar do QA Lead"
+            class="operator-avatar"
+            width="85"
+            height="85"
+          />
+          <div class="operator-info">
+            <h3>Pedro Evaristo</h3>
+            <p>QA</p>
+          </div>
+        </div>
+
+        <!-- GUIA DE COMANDOS DO JOGO -->
+        <div class="card controls-card">
+          <h3>🎮 Guia de Comandos</h3>
+
+          <div class="control-item">
+            <span>Mover Personagem</span>
+            <span class="key">Setas</span>
+          </div>
+          <div class="control-item">
+            <span>Atirar / Disparar</span>
+            <span class="key">CTRL</span>
+          </div>
+          <div class="control-item">
+            <span>Abrir Portas / Interagir</span>
+            <span class="key">ESPAÇO</span>
+          </div>
+          <div class="control-item">
+            <span>Correr</span>
+            <span class="key">SHIFT</span>
+          </div>
+          <div class="control-item">
+            <span>Trocar de Arma</span>
+            <span class="key">1 - 7</span>
+          </div>
+          <div class="control-item">
+            <span>Menu / Pausa</span>
+            <span class="key">ESC</span>
+          </div>
+        </div>
+      </aside>
     </div>
 
     <footer class="credits">
-        <p>
-            Jogo: <a href="https://freedoom.github.io/">Freedoom</a> Phase 1 v0.13.0
-            (<a href="licenses/FREEDOOM-BSD-3-Clause.txt">BSD-3-Clause</a>) ·
-            Motor: <a href="https://github.com/viti95/FastDoom">FastDoom</a> v1.3.0
-            (<a href="licenses/FASTDOOM-GPL-2.0.txt">GPL-2.0</a>,
-            <a href="source/FastDoom-1.3.0-src.zip">código-fonte</a>) ·
-            Emulador: <a href="https://js-dos.com/">js-dos</a> v6.22.60
-            (<a href="licenses/JSDOS-GPL-2.0.txt">GPL-2.0</a>,
-            <a href="source/js-dos-6.22.60-src.zip">código-fonte</a>)
-        </p>
-        <p lang="en">This product uses DOS/32 Advanced DOS Extender technology. (<a href="licenses/DOS32A-LICENSE.txt">licença</a>)</p>
-        <p>Projeto independente, sem afiliação com a id Software, a Bethesda ou a Microsoft.</p>
+      <p>
+        Jogo: <a href="https://freedoom.github.io/">Freedoom</a> Phase 1 v0.13.0 (<a
+          href="licenses/FREEDOOM-BSD-3-Clause.txt"
+          >BSD-3-Clause</a
+        >) · Motor: <a href="https://github.com/viti95/FastDoom">FastDoom</a> v1.3.0 (<a
+          href="licenses/FASTDOOM-GPL-2.0.txt"
+          >GPL-2.0</a
+        >, <a href="source/FastDoom-1.3.0-src.zip">código-fonte</a>) · Emulador:
+        <a href="https://js-dos.com/">js-dos</a> v6.22.60 (<a href="licenses/JSDOS-GPL-2.0.txt"
+          >GPL-2.0</a
+        >, <a href="source/js-dos-6.22.60-src.zip">código-fonte</a>)
+      </p>
+      <p lang="en">
+        This product uses DOS/32 Advanced DOS Extender technology. (<a
+          href="licenses/DOS32A-LICENSE.txt"
+          >licença</a
+        >)
+      </p>
+      <p>Projeto independente, sem afiliação com a id Software, a Bethesda ou a Microsoft.</p>
     </footer>
-
-</body>
+  </body>
 </html>
