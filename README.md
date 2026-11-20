@@ -120,6 +120,7 @@ O TypeScript fica na versão 6.0 porque o typescript-eslint ainda não suporta a
 ├── commitlint.config.mjs   # Padrão das mensagens de commit
 ├── tsconfig.json           # Checagem de tipos dos testes (`npm run typecheck`)
 ├── package.json            # Dependências e scripts do ecossistema Node.js / Playwright
+├── LICENSE                 # Licença MIT do código do projeto
 └── README.md               # Documentação do projeto
 ```
 
@@ -179,6 +180,10 @@ No CI, o reporter `github` marca as falhas direto no código do pull request.
 ---
 
 ## 📜 Licenças
+
+O código deste projeto (página, `app.js`, testes e configurações) está sob a [licença MIT](LICENSE).
+
+A MIT não se aplica aos componentes de terceiros distribuídos junto: o pacote `public/freedoom.zip`, os arquivos de `public/vendor/` e os de `public/source/`. Cada um mantém a própria licença:
 
 | Componente                        | Versão  | Licença                     | Origem                                                                   |
 | --------------------------------- | ------- | --------------------------- | ------------------------------------------------------------------------ |
