@@ -97,7 +97,6 @@ O TypeScript fica na versão 6.0 porque o typescript-eslint ainda não suporta a
 │   ├── index.html      # Aplicação web com o container WebAssembly
 │   ├── app.js          # Inicialização do emulador, do jogo e do áudio
 │   ├── style.css       # Estilos da página
-│   ├── avatar.webp     # Foto do cartão do operador
 │   ├── freedoom.zip    # Pacote do jogo (FDOOM.EXE, FREEDM1.WAD, FDOOM.CFG)
 │   ├── vendor/js-dos/  # Emulador js-dos 6.22.60 (js-dos.js, wdosbox.js, wdosbox.wasm.js)
 │   ├── licenses/       # Textos das licenças do emulador, do motor e do jogo

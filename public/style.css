@@ -123,15 +123,6 @@ h1 {
   gap: 15px;
 }
 
-.operator-avatar {
-  width: 85px;
-  height: 85px;
-  border-radius: 50%;
-  border: 3px solid var(--accent-red);
-  object-fit: cover;
-  box-shadow: 0 0 12px rgba(255, 42, 42, 0.4);
-}
-
 .operator-info h3 {
   margin: 0;
   color: var(--text-bright);
