@@ -57,6 +57,13 @@ O jogo usa apenas componentes livres: o motor é GPL e os dados do jogo original
    npm run test:ui
    ```
 
+   | Comando                         | O que faz                                                              |
+   | ------------------------------- | ---------------------------------------------------------------------- |
+   | `npm run test:smoke`            | Só os testes essenciais (tag `@smoke`), para uma checagem rápida       |
+   | `npm run test:perf`             | Só os testes de performance (tag `@perf`)                              |
+   | `npm run test:stress`           | Roda cada teste 3 vezes, sem retry, para caçar testes instáveis        |
+   | `npm run test:update-snapshots` | Recaptura as imagens de referência da regressão visual (tag `@visual`) |
+
 5. **Abrir o jogo no navegador (opcional):**
    ```bash
    npm run serve
@@ -99,10 +106,13 @@ O TypeScript fica na versão 6.0 porque o typescript-eslint ainda não suporta a
 │   ├── pages/              # Page Objects: seletores, comandos e leitura da tela
 │   │   ├── home-page.ts    # Página em volta do jogo
 │   │   └── game-page.ts    # Jogo dentro do canvas
-│   ├── fixtures.ts         # Entrega o jogo aberto, iniciado ou em partida
+│   ├── __snapshots__/      # Imagens de referência da regressão visual
+│   ├── fixtures.ts         # Entrega o jogo aberto, iniciado ou em partida, e o log da página
 │   ├── page.spec.ts        # Testes da página
 │   ├── boot.spec.ts        # Testes da inicialização do emulador
-│   └── gameplay.spec.ts    # Testes das regras do jogo
+│   ├── gameplay.spec.ts    # Testes das regras do jogo
+│   ├── visual.spec.ts      # Regressão visual da barra de status
+│   └── performance.spec.ts # Tempo de boot e taxa de quadros
 ├── playwright.config.ts    # Configuração do Playwright e do servidor de testes
 ├── .github/workflows/deploy.yml  # CI: qualidade e testes antes de publicar no GitHub Pages
 ├── .husky/                 # Hooks do Git: lint antes do commit e padrão da mensagem
@@ -118,20 +128,43 @@ O TypeScript fica na versão 6.0 porque o typescript-eslint ainda não suporta a
 
 ## 🧪 Cobertura de Testes Automatizados
 
-A suite é escrita em TypeScript, usa o padrão Page Object Model e se divide em três camadas:
+A suite é escrita em TypeScript, usa o padrão Page Object Model e se divide em cinco camadas:
 
 - **Página:** título, tamanho do canvas (`640x400`), guia de comandos e links de licença.
-- **Boot:** ordem de inicialização, ausência de erros, tela desenhada, animação sem jogador, áudio liberado na primeira interação e erro registrado quando o `freedoom.zip` não carrega.
-- **Gameplay:** valores iniciais do HUD, câmera parada sem input, andar, girar, tiro que consome munição e pausa pelo menu.
+- **Boot:** ordem de inicialização, ausência de erros, tela desenhada, animação sem jogador, áudio liberado na primeira interação e erro registrado quando o `freedoom.zip` ou o emulador não carregam.
+- **Gameplay:** valores iniciais do HUD, câmera parada sem input, andar, girar, tiro com CTRL e com o mouse (exatamente uma bala por tiro), troca para o punho e de volta para a pistola, punho que não gasta balas, teclas de armas que o jogador não tem e pausa pelo menu.
+- **Regressão visual:** a barra de status do início da partida comparada pixel a pixel com uma imagem de referência.
+- **Performance:** tempo de boot e taxa de quadros ao girar a câmera, cada um com um orçamento. O valor medido fica anotado no relatório HTML.
+
+Além das verificações de cada teste, uma fixture automática reprova qualquer teste em que a página lance um erro de JavaScript.
 
 ### Como o jogo é verificado
 
-O jogo não tem elementos HTML para consultar: tudo é pixel dentro do canvas. Por isso os testes leem os pixels e usam duas técnicas:
+O jogo não tem elementos HTML para consultar: tudo é pixel dentro do canvas. Por isso os testes leem os pixels da resolução interna do jogo (320x200) e usam três técnicas:
 
-- **Impressão digital do HUD:** um hash da região dos números. A munição e a vida têm um valor conhecido no início da partida, e o tiro precisa mudar só o da munição.
-- **Diferença entre leituras:** a fração de pixels que mudou. Parado, o cenário varia até cerca de 5%. Andando ou girando, varia mais de 50%.
+- **Impressão digital do HUD:** um hash da região dos números. Os valores conhecidos (50 e 49 balas, campo vazio do punho, 100% de vida) ficam em `tests/pages/game-page.ts`.
+- **Diferença entre leituras:** a fração de pixels que mudou. Parado, o cenário varia até cerca de 6%. Andando ou girando, varia mais de 50%.
+- **Imagem de referência:** um PNG recortado do canvas, com o rosto do jogador coberto, porque ele se mexe sozinho. Como sai dos pixels do emulador, e não de um screenshot da página, a mesma imagem vale em qualquer sistema operacional.
 
-Os testes rodam um por vez, porque o emulador é pesado e a disputa por CPU pode atrasar o jogo. Se o `FREEDM1.WAD` mudar, as impressões digitais em `tests/pages/game-page.ts` precisam ser recapturadas.
+### Esperas por estado, não por tempo
+
+Os testes não usam pausas fixas. Depois de cada comando, o Page Object espera a tela mostrar o resultado:
+
+- **Partida iniciada:** o HUD mostra 50 de munição e 100% de vida, e a transição de tela termina.
+- **Tela parada:** duas leituras seguidas do cenário diferem menos de 10%.
+- **Jogo pausado:** duas leituras seguidas do cenário são idênticas.
+- **Menu aberto ou fechado:** a região do menu muda mais de 25%. Parado, ela varia até 15%. Abrir ou fechar o menu muda de 37% a 47%.
+
+A regra `playwright/no-wait-for-timeout` do ESLint impede pausas fixas nos testes. A única exceção, com um comentário explicando o motivo, é a janela de observação do teste que confere que a câmera fica parada sem input.
+
+Os testes rodam um por vez, porque o emulador é pesado e a disputa por CPU pode atrasar o jogo. Se o `FREEDM1.WAD` mudar, as impressões digitais em `tests/pages/game-page.ts` precisam ser recapturadas, assim como a imagem de referência (`npm run test:update-snapshots`). Confira a imagem nova antes de fazer o commit.
+
+### Problema conhecido: o boot às vezes trava
+
+De vez em quando, em cerca de 5% das vezes nas medições locais, o emulador para no prompt `C:\>` e não executa o `FDOOM.EXE`. Os logs são iguais aos de um boot normal até `MIDI: Opened device:none`, e esperar mais não adianta. O travamento não se reproduz sob demanda.
+
+- Os testes do **boot** esperam um único boot e falham se ele travar: é o problema que eles devem mostrar.
+- Os outros testes recarregam a página uma vez quando o boot trava. O relatório registra a anotação `boot travou` no teste.
 
 ### Integração contínua
 

@@ -27,13 +27,13 @@ export default tseslint.config(
     },
   },
   {
+    // As pausas fixas ficam proibidas nos testes: o Page Object espera o estado
+    // da tela mudar. Uma exceção precisa de um comentário que a justifique.
     files: ['tests/**/*.spec.ts'],
     ...playwright.configs['flat/recommended'],
     rules: {
       ...playwright.configs['flat/recommended'].rules,
-      // Os testes do jogo precisam de pausas fixas: o emulador lê o teclado em
-      // ciclos e não há evento de página que avise quando o quadro mudou.
-      'playwright/no-wait-for-timeout': 'off',
+      'playwright/no-wait-for-timeout': 'error',
     },
   },
 
