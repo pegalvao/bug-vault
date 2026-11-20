@@ -35,21 +35,27 @@
       return;
     }
 
-    // Inicializa o emulador js-dos v6.22.60, servido de public/vendor/js-dos
+    // Inicializa o emulador js-dos v6.22.60, servido de public/vendor/js-dos.
+    // Usa then/catch em vez de .ready(): o .ready() não trata a falha ao baixar
+    // o emulador, que viraria um erro solto na página.
     Dos(canvas, {
       wdosboxUrl: 'vendor/js-dos/wdosbox.js',
-    }).ready((fs, main) => {
-      console.log('[QA Log] Emulador WebAssembly pronto. Extraindo freedoom.zip...');
+    })
+      .then(({ fs, main }) => {
+        console.log('[QA Log] Emulador WebAssembly pronto. Extraindo freedoom.zip...');
 
-      fs.extract('freedoom.zip')
-        .then(() => {
-          console.log('[QA Log] Extração concluída. Executando FDOOM.EXE...');
-          main(['-c', 'FDOOM.EXE']);
-        })
-        .catch((err) => {
-          console.error('[QA Error] Erro ao extrair ou executar pacote do jogo:', err);
-        });
-    });
+        fs.extract('freedoom.zip')
+          .then(() => {
+            console.log('[QA Log] Extração concluída. Executando FDOOM.EXE...');
+            main(['-c', 'FDOOM.EXE']);
+          })
+          .catch((err) => {
+            console.error('[QA Error] Erro ao extrair ou executar pacote do jogo:', err);
+          });
+      })
+      .catch((err) => {
+        console.error('[QA Error] Não foi possível carregar o emulador:', err);
+      });
 
     // 4. Na primeira interação do usuário, retoma os contextos de áudio suspensos
     const unlockAudio = () => {
