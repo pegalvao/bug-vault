@@ -168,7 +168,14 @@ De vez em quando, em cerca de 5% das vezes nas medições locais, o emulador par
 
 ### Integração contínua
 
-A cada push e pull request na `main`, o GitHub Actions confere as mensagens dos commits novos, roda o lint, a checagem de formatação, o `npm run typecheck` e a suite do Playwright. O site só é publicado no GitHub Pages depois de um push em que os testes passaram. Quando algum teste falha, o relatório do Playwright fica disponível como artefato da execução.
+A cada push e pull request na `main`, o GitHub Actions roda quatro jobs:
+
+1. **Qualidade de código:** confere as mensagens dos commits novos, o lint, a formatação e os tipos. Se falhar, os testes nem começam.
+2. **Testes E2E:** a suite é dividida em 2 shards, em máquinas separadas, e cada uma roda um jogo por vez. Cada shard guarda um relatório parcial (blob).
+3. **Relatório:** junta os relatórios parciais em um HTML só, com traces e capturas das falhas, e publica como artefato `playwright-report`. Roda mesmo quando os testes falham.
+4. **Deploy:** o site só é publicado no GitHub Pages depois de um push em que os testes passaram.
+
+No CI, o reporter `github` marca as falhas direto no código do pull request.
 
 ---
 

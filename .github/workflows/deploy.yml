@@ -16,10 +16,11 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  test:
-    name: Qualidade e testes E2E
+  # Checagens rápidas primeiro: se falharem, nem vale subir o emulador.
+  quality:
+    name: Qualidade de código
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
@@ -53,20 +54,80 @@ jobs:
       - name: Checar os tipos
         run: npm run typecheck
 
+  # O emulador pede um worker por máquina, então a suíte é dividida entre
+  # máquinas (shards) em vez de entre workers. Cada shard roda uma parte.
+  test:
+    name: Testes E2E (shard ${{ matrix.shard }}/2)
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      # Um shard que falha não cancela o outro: o relatório sai completo.
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar o Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar as dependências
+        run: npm ci
+
       - name: Instalar o Chromium do Playwright
         run: npx playwright install --with-deps chromium
 
       - name: Rodar os testes
-        run: npm test
+        run: npx playwright test --shard=${{ matrix.shard }}/2
 
-      - name: Publicar o relatório do Playwright
-        if: failure()
+      - name: Guardar o relatório parcial
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-${{ matrix.shard }}
+          path: blob-report/
+          retention-days: 1
+
+  # Junta os relatórios dos shards em um HTML só, com traces e capturas de
+  # tela das falhas. Roda mesmo quando os testes falham.
+  report:
+    name: Relatório do Playwright
+    needs: test
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar o Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar as dependências
+        run: npm ci
+
+      - name: Baixar os relatórios parciais
+        uses: actions/download-artifact@v4
+        with:
+          pattern: blob-report-*
+          path: all-blob-reports
+          merge-multiple: true
+
+      - name: Juntar os relatórios
+        run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+      - name: Publicar o relatório
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: |
-            playwright-report/
-            test-results/
+          path: playwright-report/
           retention-days: 14
 
   deploy:
